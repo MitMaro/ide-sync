@@ -56,6 +56,7 @@ usage() {
 	echo -e "       ${self} link [options] <project-name>"
 	echo -e "       ${self} commit [options]"
 	echo -e "       ${self} sync [options]"
+	echo -e "       ${self} list"
 	echo -e "       ${self} --help"
 	echo -e
 	echo -e "Arguments:"
@@ -324,6 +325,22 @@ command_sync() {
 	${dry_run} git push origin master || error "Error pushing changes" ${EXIT_CODE_GENERAL}
 }
 
+command_list() {
+	verbose_message "Changing to $(highlight "$settings_directory")"
+	cd "$settings_directory"
+	# find all directories in current, remove everything but the directory name, and remove empty lines
+	list_items=$(find . -type d -maxdepth 1 -not -path '*/\.*' | cut -c 3- | sed '/^$/d')
+
+	for item in ${list_items}; do
+		changes=
+		if [[ "$(git status --short "$item" | wc -l)" -gt "0" ]]; then
+			changes=" $(highlight [modified])"
+		fi
+		message "${item} ${changes}"
+
+	done
+}
+
 # check for required commands
 if ! hash git 2>/dev/null; then
 	error "git wasn't found; please install and ensure it's on the PATH" ${EXIT_CODE_INVALID_STATE}
@@ -390,7 +407,7 @@ if [[ ${command} != "init" ]]; then
 	[[ -z "${ide_sync_config_file}" ]] && error "Invalid: Config file path cannot be empty" ${EXIT_CODE_INVALID_ARGUMENT}
 
 	if [[ -e "${ide_sync_config_file}" ]]; then
-		info_message "Loading config file: $(highlight "${ide_sync_config_file}")"
+		verbose_message "Loading config file: $(highlight "${ide_sync_config_file}")"
 		source "${ide_sync_config_file}"
 	else
 		error "Config file not found: $(highlight "${ide_sync_config_file}")"
@@ -406,7 +423,7 @@ if [[ ${command} != "init" ]]; then
 		error "The settings directory provided is not a valid directory" ${EXIT_CODE_INVALID_STATE}
 	fi
 
-	if [[ ${command} != "commit" ]] && [[ ${command} != "sync" ]]; then
+	if [[ ${command} != "commit" ]] && [[ ${command} != "sync" ]] && [[ ${command} != "list" ]]; then
 		if [[ -z "${project_name}" ]]; then
 			error "Must provide project name" ${EXIT_CODE_INVALID_ARGUMENT} ${PRINT_USAGE}
 		elif [[ ! "${project_name}" =~ $PROJECT_NAME_REGEX ]]; then
@@ -440,6 +457,9 @@ case ${command} in
 		info_message ${C_STATUS}"sync starting"${C_RESET}
 		command_sync
 		info_message ${C_STATUS}"sync finished"${C_RESET}
+		;;
+	list)
+		command_list
 		;;
 	*)
 		error "Unknown command: $(highlight "${command}")" ${EXIT_CODE_INVALID_COMMAND} ${PRINT_USAGE}
