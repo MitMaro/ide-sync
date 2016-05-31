@@ -351,7 +351,7 @@ command="$1"
 shift
 
 # check for help without command
-if [[ ${command} == "--help" ]]; then
+if [[ -z ${command} ]] || [[ ${command} == "--help" ]]; then
 	usage
 	exit 0
 fi
