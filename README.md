@@ -49,7 +49,7 @@ To push the changes to the remote repository use the `sync` command.
 The command will merge in changes from the remote, and you may be prompted to merge the changes. After the merge is
 successful the local changes will be pushed to the remote repository. 
 
-### Commiting Project Settings
+### Committing Project Settings
 
 When you make changes to your project settings you will need to commit these changes. The `commit` command will handle
 this.
@@ -64,6 +64,12 @@ To link existing settings into a project use the `link` command providing the un
 `track` command.
 
     ide-sync link name-of-project
+
+### Listing Project
+
+To list the available projects use the `list` command.
+
+    ide-sync list
 
 ## License
 
