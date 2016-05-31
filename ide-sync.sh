@@ -82,7 +82,7 @@ highlight() {
 
 message() {
 	message=$(date '+%Y/%m/%d %H:%M:%S')
-	message="[${C_LOG_DATE}${message}${C_RESET}] ${@}"
+	message="[${C_LOG_DATE}${message}${C_RESET}] $*"
 	echo -e "${message}"
 }
 
@@ -265,8 +265,9 @@ command_commit() {
 
 	verbose_message "Changing to $(highlight "$settings_directory")"
 	cd "$settings_directory"
-	for dir in $(ls -1); do
+	for dir in *; do
 		if [[ -d "$dir" ]]; then
+			verbose_message "Checking $(highlight "$dir")"
 			changes=$(git status --short -- "$dir")
 			if [[ ! -z "$changes" ]]; then
 				verbose_message "Adding $(highlight "$dir")"
@@ -334,7 +335,7 @@ command_list() {
 	for item in ${list_items}; do
 		changes=
 		if [[ "$(git status --short "$item" | wc -l)" -gt "0" ]]; then
-			changes=" $(highlight [modified])"
+			changes=" $(highlight "[modified]")"
 		fi
 		message "${item} ${changes}"
 
