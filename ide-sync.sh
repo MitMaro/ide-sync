@@ -61,6 +61,16 @@ usage() {
 	echo -e "       ${self} self-update"
 	echo -e "       ${self} --help"
 	echo -e
+	echo -e "Commands:"
+	echo -e "  $(highlight init)          Initialize a new settings directory"
+	echo -e "  $(highlight track)         Start tracking a project"
+	echo -e "  $(highlight delete)        Delete a tracked project"
+	echo -e "  $(highlight link)          Link an existing project"
+	echo -e "  $(highlight commit)        Commit any changes to all projects"
+	echo -e "  $(highlight sync)          Fetch new changes on remote, and push local changes"
+	echo -e "  $(highlight list)          List existing projects"
+	echo -e "  $(highlight self-update)   Update this program"
+	echo -e
 	echo -e "Arguments:"
 	echo -e "  $(highlight settings-directory)    The location where the repository will be created."
 	echo -e "  $(highlight project-name)          The name used a reference for the project"
