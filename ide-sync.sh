@@ -329,7 +329,7 @@ command_list() {
 	verbose_message "Changing to $(highlight "$settings_directory")"
 	cd "$settings_directory"
 	# find all directories in current, remove everything but the directory name, and remove empty lines
-	list_items=$(find . -type d -maxdepth 1 -not -path '*/\.*' | cut -c 3- | sed '/^$/d')
+	list_items=$(find . -maxdepth 1 -type d -not -path '*/\.*' | cut -c 3- | sed '/^$/d')
 
 	for item in ${list_items}; do
 		changes=
