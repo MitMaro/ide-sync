@@ -13,6 +13,12 @@ Create an alias to `ide-sync.sh` by adding the following to your shell profile
 
     alias ide-sync=/path/to/install/directory/ide-sync.sh
 
+## Updating
+
+Updating is fairly easy, and uses git. Assuming installed using the alias above, run:
+
+    ide-sync self-update
+
 ## Instructions
 
 ### Remote repository

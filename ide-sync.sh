@@ -58,6 +58,7 @@ usage() {
 	echo -e "       ${self} commit [options]"
 	echo -e "       ${self} sync [options]"
 	echo -e "       ${self} list"
+	echo -e "       ${self} self-update"
 	echo -e "       ${self} --help"
 	echo -e
 	echo -e "Arguments:"
@@ -364,6 +365,37 @@ command_delete() {
 	${dry_run} git commit -m "Removed ${settings_directory} settings"
 }
 
+command_selfupdate() {
+
+	# get this scripts containing directory
+	# credit: http://stackoverflow.com/a/246128/124861
+	_source="${BASH_SOURCE[0]}"
+	while [ -h "$_source" ]; do
+	  self_dir="$( cd -P "$( dirname "$_source" )" && pwd )"
+	  _source="$(readlink "$_source")"
+	  [[ ${_source} != /* ]] && _source="$self_dir/$_source"
+	done
+	self_dir="$( cd -P "$( dirname "$_source" )" && pwd )"
+
+	verbose_message "Changing to $(highlight "$self_dir")"
+	cd "$self_dir"
+
+	if [[ "$(git rev-parse --abbrev-ref HEAD)" != "master" ]]; then
+		error "Cannot self-update as project is not on the master branch" ${EXIT_CODE_INVALID_STATE}
+	fi
+
+	# check for local changes
+	if ! git diff-index --quiet HEAD --; then
+		error "Cannot self-update when there are local changes." ${EXIT_CODE_INVALID_STATE}
+	fi
+
+	verbose_message "Fetching from origin"
+	${dry_run} git fetch origin || error "Error fetching from remote; check your network connection" ${EXIT_CODE_GENERAL}
+	# this could fail if there are local changes in conflict, but that can be handled manually
+	verbose_message "Rebasing origin/master"
+	${dry_run} git rebase origin/master || error "Error updating" ${EXIT_CODE_GENERAL}
+}
+
 # check for required commands
 if ! hash git 2>/dev/null; then
 	error "git wasn't found; please install and ensure it's on the PATH" ${EXIT_CODE_INVALID_STATE}
@@ -491,6 +523,9 @@ case ${command} in
 		;;
 	list)
 		command_list
+		;;
+	self-update)
+		command_selfupdate
 		;;
 	*)
 		error "Unknown command: $(highlight "${command}")" ${EXIT_CODE_INVALID_COMMAND} ${PRINT_USAGE}
