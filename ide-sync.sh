@@ -53,6 +53,7 @@ usage() {
 	echo -e
 	echo -e "Usage: ${self} init [options] <settings-directory>"
 	echo -e "       ${self} track [options] <project-name>"
+	echo -e "       ${self} delete [options] <project-name>"
 	echo -e "       ${self} link [options] <project-name>"
 	echo -e "       ${self} commit [options]"
 	echo -e "       ${self} sync [options]"
@@ -338,8 +339,29 @@ command_list() {
 			changes=" $(highlight "[modified]")"
 		fi
 		message "${item} ${changes}"
-
 	done
+}
+
+command_delete() {
+	verbose_message "Changing to $(highlight "$settings_directory")"
+	cd "$settings_directory"
+
+	verbose_message "Checking for project directory"
+	if [[ ! -d "$project_directory" ]]; then
+		error "Project with the name, ${project_name}, does not exists" ${EXIT_CODE_INVALID_STATE}
+	fi
+
+	read -p "Delete project ${project_name} [y/n]? " -n 1 -r
+	echo
+
+	[[ ! $REPLY =~ ^[Yy]$ ]] && error "Aborted" ${EXIT_CODE_ABORT}
+
+	warning "Deleting a project does not remove project links."
+
+	verbose_message "Deleting project settings directory"
+	${dry_run} git rm "${settings_directory}" || error "Error deleting directory" ${EXIT_CODE_GENERAL}
+	verbose_message "Committing changes"
+	${dry_run} git commit -m "Removed ${settings_directory} settings"
 }
 
 # check for required commands
@@ -391,7 +413,7 @@ while (($#)); do
 					[[ ! -z ${settings_directory} ]] && argument_error "$1"
 					settings_directory=${1}
 					;;
-				track)
+				track|delete)
 					[[ ! -z ${project_name} ]] && argument_error "$1"
 					project_name=${1}
 					;;
@@ -424,13 +446,16 @@ if [[ ${command} != "init" ]]; then
 		error "The settings directory provided is not a valid directory" ${EXIT_CODE_INVALID_STATE}
 	fi
 
-	if [[ ${command} != "commit" ]] && [[ ${command} != "sync" ]] && [[ ${command} != "list" ]]; then
-		if [[ -z "${project_name}" ]]; then
-			error "Must provide project name" ${EXIT_CODE_INVALID_ARGUMENT} ${PRINT_USAGE}
-		elif [[ ! "${project_name}" =~ $PROJECT_NAME_REGEX ]]; then
-			error "Invalid project name, must contain only alphanumeric, _ and - characters and must begin with a letter" ${EXIT_CODE_INVALID_ARGUMENT}
-		fi
-	fi
+	# extra checks based on command name
+	case ${command} in
+		track|link|delete)
+			if [[ -z "${project_name}" ]]; then
+				error "Must provide project name" ${EXIT_CODE_INVALID_ARGUMENT} ${PRINT_USAGE}
+			elif [[ ! "${project_name}" =~ $PROJECT_NAME_REGEX ]]; then
+				error "Invalid project name, must contain only alphanumeric, _ and - characters and must begin with a letter" ${EXIT_CODE_INVALID_ARGUMENT}
+			fi
+			;;
+	esac
 fi
 
 case ${command} in
@@ -458,6 +483,11 @@ case ${command} in
 		info_message ${C_STATUS}"sync starting"${C_RESET}
 		command_sync
 		info_message ${C_STATUS}"sync finished"${C_RESET}
+		;;
+	delete)
+		info_message ${C_STATUS}"delete starting"${C_RESET}
+		command_delete
+		info_message ${C_STATUS}"delete finished"${C_RESET}
 		;;
 	list)
 		command_list

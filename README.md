@@ -30,7 +30,6 @@ The `init` command will initialize the repository at the directory provided.
 You will be prompted for a remote repository. Following the instructions provided. A configuration file will be written
 to your home directory with the settings you provide.
 
-
 ### Tracking Project Settings
 
 From your project root (directory that contains `.idea`) run the `track` command providing a unique project name.
@@ -39,6 +38,15 @@ From your project root (directory that contains `.idea`) run the `track` command
 
 The `.idea` directory will be copied to the directory provided in the `init` command, and then symlinked back to the
 project root.
+
+### Deleting Project Settings
+
+Delete a tracked project using the `delete` command. The `list` command can be used to find the available projects to
+delete.
+
+    ide-sync delete name-of-project
+
+You will be prompted to confirm the deletion.
 
 ### Syncing Changes to Remote
 
