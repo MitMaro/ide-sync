@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [0.2.0] - 2016-06-06
 ### Added
 - `--porcelain` flag that outputs script friendly output
 - `show-dir` command that show the settings directory
@@ -32,6 +34,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Initial tool with init, track, link, commit and sync commands
 - Initial README.md with instructions on how to install and use
 
-[Unreleased]: https://github.com/MitMaro/ide-sync/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/MitMaro/ide-sync/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/MitMaro/ide-sync/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/MitMaro/ide-sync/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/MitMaro/ide-sync/compare/v0.1.0...v0.1.1
