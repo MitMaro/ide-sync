@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - `--porcelain` flag that outputs script friendly output
+### Fixed
+- Documentation formatting consistency
 
 ## [0.1.2] - 2016-05-30
 ### Added
