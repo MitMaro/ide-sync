@@ -46,6 +46,7 @@ is_dry_run=false
 dry_run=
 verbose=false
 command=
+porcelain=false
 
 usage() {
 	echo -e
@@ -84,7 +85,10 @@ usage() {
 	echo -e "  $(highlight "--dry-run")        Do not perform actions that will have consequences. Providing this"
 	echo -e "                   options also assumes $(highlight "--verbose")."
 	echo -e
-	echo -e "  $(highlight "--help")           Show this usage message and exit"
+	echo -e "  $(highlight "--porcelain")      Give the output in an easy-to-parse format for scripts. Applicable"
+	echo -e "                   to the $(highlight "list") and $(highlight "show-dir") commands only. Always disables $(highlight "--verbose")."
+	echo -e
+	echo -e "  $(highlight "--help")           Show this usage message and exit."
 	echo -e
 }
 
@@ -340,16 +344,24 @@ command_sync() {
 
 command_list() {
 	verbose_message "Changing to $(highlight "$settings_directory")"
+
+	if ${porcelain}; then
+		msg_command=echo
+		highlight_command=echo
+	else
+		msg_command=message
+		highlight_command=highlight
+	fi
+
 	cd "$settings_directory"
 	# find all directories in current, remove everything but the directory name, and remove empty lines
 	list_items=$(find . -maxdepth 1 -type d -not -path '*/\.*' | cut -c 3- | sed '/^$/d')
-
 	for item in ${list_items}; do
 		changes=
 		if [[ "$(git status --short "$item" | wc -l)" -gt "0" ]]; then
-			changes=" $(highlight "[modified]")"
+			changes=" $(${highlight_command} "[modified]")"
 		fi
-		message "${item} ${changes}"
+		${msg_command} "${item} ${changes}"
 	done
 }
 
@@ -434,6 +446,9 @@ while (($#)); do
 		-v|--verbose)
 			verbose=true
 			;;
+		--porcelain)
+			porcelain=true
+			;;
 		--dry-run)
 			verbose=true
 			is_dry_run=true;
@@ -467,6 +482,11 @@ while (($#)); do
 	esac
 	shift
 done
+
+# porcelain always disables verbose
+if ${porcelain}; then
+	verbose=false
+fi
 
 if [[ ${command} != "init" ]]; then
 	[[ -z "${ide_sync_config_file}" ]] && error "Invalid: Config file path cannot be empty" ${EXIT_CODE_INVALID_ARGUMENT}
