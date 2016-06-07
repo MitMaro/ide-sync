@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - `--porcelain` flag that outputs script friendly output
 - `show-dir` command that show the settings directory
+### Changed
+- `sync` now commits before trying sync
 ### Fixed
 - Documentation formatting consistency
 - `link` command invalid error message about project directory

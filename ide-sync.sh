@@ -555,6 +555,7 @@ case ${command} in
 		;;
 	sync)
 		info_message ${C_STATUS}"sync starting"${C_RESET}
+		command_commit
 		command_sync
 		info_message ${C_STATUS}"sync finished"${C_RESET}
 		;;
