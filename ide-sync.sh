@@ -400,7 +400,7 @@ command_show-directory() {
 
 }
 
-command_selfupdate() {
+command_self-update() {
 	# get this scripts containing directory
 	# credit: http://stackoverflow.com/a/246128/124861
 	_source="${BASH_SOURCE[0]}"
@@ -571,7 +571,9 @@ case ${command} in
 		command_show-directory
 		;;
 	self-update)
-		command_selfupdate
+		info_message ${C_STATUS}"self-update starting"${C_RESET}
+		command_self-update
+		info_message ${C_STATUS}"self-update starting"${C_RESET}
 		;;
 	*)
 		error "Unknown command: $(highlight "${command}")" ${EXIT_CODE_INVALID_COMMAND} ${PRINT_USAGE}
