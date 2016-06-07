@@ -307,7 +307,7 @@ command_sync() {
 	${dry_run} git fetch origin --quiet || error "Error fetching from remote" ${EXIT_CODE_GENERAL}
 
 	verbose_message "Rebasing against origin master"
-	${dry_run} git rebase --quiet origin/master || error "Error rebasing against remote branch" ${EXIT_CODE_GENERAL}
+	${dry_run} git rebase --quiet origin/master
 
 	# dry run does not apply inside this block
 	while true; do

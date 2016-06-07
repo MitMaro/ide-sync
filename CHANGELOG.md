@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Documentation formatting consistency
 - `link` command invalid error message about project directory
 - `link` command not checking for missing project-name
+- `sync` would always fail on conflict
 
 ## [0.1.2] - 2016-05-30
 ### Added
