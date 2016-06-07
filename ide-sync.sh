@@ -255,8 +255,10 @@ command_track() {
 }
 
 command_link() {
+	local project_directory="${settings_directory}/${project_name}"
+	
 	if [[ ! -d "$project_directory" ]]; then
-		error "Project with the name, ${project_name}, does not exists" ${EXIT_CODE_INVALID_STATE}
+		error "Project with the name, ${project_name}, does not exists in " ${EXIT_CODE_INVALID_STATE}
 	fi
 
 	check_existing_symlink
@@ -480,7 +482,7 @@ while (($#)); do
 					[[ ! -z ${settings_directory} ]] && argument_error "$1"
 					settings_directory=${1}
 					;;
-				track|delete)
+				track|link|delete)
 					[[ ! -z ${project_name} ]] && argument_error "$1"
 					project_name=${1}
 					;;

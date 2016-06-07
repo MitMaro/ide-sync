@@ -8,6 +8,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - `show-dir` command that show the settings directory
 ### Fixed
 - Documentation formatting consistency
+- `link` command invalid error message about project directory
+- `link` command not checking for missing project-name
 
 ## [0.1.2] - 2016-05-30
 ### Added
