@@ -59,6 +59,7 @@ usage() {
 	echo -e "       ${self} commit [options]"
 	echo -e "       ${self} sync [options]"
 	echo -e "       ${self} list [options]"
+	echo -e "       ${self} show-dir [options]"
 	echo -e "       ${self} self-update"
 	echo -e "       ${self} --help"
 	echo -e
@@ -70,6 +71,7 @@ usage() {
 	echo -e "  $(highlight commit)        Commit any changes to all projects."
 	echo -e "  $(highlight sync)          Runs $(highlight "commit"), fetches new changes from remote, and push local changes."
 	echo -e "  $(highlight list)          List existing projects."
+	echo -e "  $(highlight show-dir)      Outputs the settings directory."
 	echo -e "  $(highlight self-update)   Update this program."
 	echo -e
 	echo -e "Arguments:"
@@ -387,8 +389,16 @@ command_delete() {
 	${dry_run} git commit -m "Removed ${settings_directory} settings"
 }
 
-command_selfupdate() {
+command_show-directory() {
+	if ${porcelain}; then
+		echo ${settings_directory}
+	else
+		message ${settings_directory}
+	fi
 
+}
+
+command_selfupdate() {
 	# get this scripts containing directory
 	# credit: http://stackoverflow.com/a/246128/124861
 	_source="${BASH_SOURCE[0]}"
@@ -553,6 +563,9 @@ case ${command} in
 		;;
 	list)
 		command_list
+		;;
+	show-dir)
+		command_show-directory
 		;;
 	self-update)
 		command_selfupdate

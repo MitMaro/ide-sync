@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - `--porcelain` flag that outputs script friendly output
+- `show-dir` command that show the settings directory
 ### Fixed
 - Documentation formatting consistency
 
