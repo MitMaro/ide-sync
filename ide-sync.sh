@@ -251,7 +251,7 @@ command_track() {
 	verbose_message "Adding $(highlight "${project_name}") to git repository"
 	${dry_run} git add --all -- "${project_name}" || error "Error adding files to git repository" ${EXIT_CODE_GENERAL}
 	verbose_message "Committing changes to git repository"
-	${dry_run} git commit --quiet -m "Added initial ${project_name} settings" || error "Error commit changes to git repository" ${EXIT_CODE_GENERAL}
+	${dry_run} git commit --no-verify --quiet -m "Added initial ${project_name} settings" || error "Error commit changes to git repository" ${EXIT_CODE_GENERAL}
 }
 
 command_link() {
@@ -293,7 +293,7 @@ command_commit() {
 				verbose_message "Adding $(highlight "$dir")"
 				${dry_run} git add -A "$dir" || error "Error adding changes" ${EXIT_CODE_GENERAL}
 				verbose_message "Committing"
-				${dry_run} git commit --quiet -m "Updated ${dir} settings" || error "Error committing changes" ${EXIT_CODE_GENERAL}
+				${dry_run} git commit --no-verify --quiet -m "Updated ${dir} settings" || error "Error committing changes" ${EXIT_CODE_GENERAL}
 			fi
 		fi
 	done
@@ -388,7 +388,7 @@ command_delete() {
 	verbose_message "Deleting project settings directory"
 	${dry_run} git rm "${settings_directory}" || error "Error deleting directory" ${EXIT_CODE_GENERAL}
 	verbose_message "Committing changes"
-	${dry_run} git commit -m "Removed ${settings_directory} settings"
+	${dry_run} git commit --no-verify -m "Removed ${settings_directory} settings"
 }
 
 command_show-directory() {
